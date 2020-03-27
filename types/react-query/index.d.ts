@@ -25,6 +25,8 @@ export type QueryKeyFunction<TVariables> = () => string | [string, TVariables] |
 
 export type QueryFunction<TResult, TVariables extends object> = (variables: TVariables) => Promise<TResult>;
 
+export type QueryStatus = "success" | "loading" | "error";
+
 export interface QueryOptions<TResult> {
     manual?: boolean;
     retry?: boolean | number;
@@ -52,6 +54,7 @@ export interface QueryResult<TResult, TVariables> {
     isFetching: boolean;
     isCached: boolean;
     failureCount: number;
+    status: QueryStatus;
     refetch: (arg?: {variables?: TVariables, merge?: (...args: any[]) => any, disableThrow?: boolean}) => Promise<void>;
 }
 
@@ -93,11 +96,16 @@ export type MutateFunction<TResults, TVariables extends object> = (
     }
 ) => Promise<TResults>;
 
+// useMutation's status has an additional value apart from those used by 
+// useQuery's status
+export type MutationStatus = QueryStatus | "idle";
+
 export interface MutationResult<TResults> {
     data: TResults | null;
     isLoading: boolean;
     error: null | Error;
     promise: Promise<TResults>;
+    status: MutationStatus;
     reset: () => void;
 }
 

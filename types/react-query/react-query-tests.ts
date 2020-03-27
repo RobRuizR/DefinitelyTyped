@@ -6,6 +6,7 @@ const queryFn = () => Promise.resolve();
 const querySimple = useQuery('todos',
     () => Promise.resolve('test'));
 querySimple.data; // $ExpectType string | null
+querySimple.status // %ExpectType string
 querySimple.error; // $ExpectType Error | null
 querySimple.isLoading; // $ExpectType boolean
 querySimple.refetch(); // $ExpectType Promise<void>
@@ -42,6 +43,7 @@ const queryPaginated = useQuery('key', () => Promise.resolve({data: [1, 2, 3], n
     paginated: true,
     getCanFetchMore: (lastPage, allPages) => lastPage.next
 });
+queryPaginated.status // $ExpectType string
 queryPaginated.data; // $ExpectType { data: number[]; next: boolean; }[] | null
 queryPaginated.fetchMore; // $ExpectType (variables?: {} | undefined) => Promise<{ data: number[]; next: boolean; }> || (variables?: object | undefined) => Promise<{ data: number[]; next: boolean; }>
 queryPaginated.canFetchMore; // $ExpectType boolean
@@ -63,7 +65,7 @@ mutate(undefined, {
     waitForRefetchQueries: false
 });
 
-// Invalid mutatation funciton
+// Invalid mutatation function
 useMutation((arg1: string, arg2: string) => Promise.resolve()); // $ExpectError
 useMutation((arg1: string) => null); // $ExpectError
 
